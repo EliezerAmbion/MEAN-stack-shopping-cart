@@ -23,17 +23,60 @@ export class CartComponent implements OnInit {
 
   ngOnInit() {
     this.msg.getMsg().subscribe((product: Product | any) => {
-      // console.log(product);
+      this.addProductToCart(product);
+    });
+  }
+
+  addProductToCart(product: Product) {
+    // console.log(product);
+
+    let itemExist = false;
+
+    // guard clause if cart has the same id
+    for (let item in this.cartItems) {
+      if (this.cartItems[item].productId === product.id) {
+        this.cartItems[item].qty++;
+        itemExist = true;
+        break;
+      }
+    }
+
+    // if no id is the same, push to cart
+    if (!itemExist) {
       this.cartItems.push({
+        productId: product.id,
         productName: product.name,
         qty: 1,
         price: product.price,
       });
+    }
 
-      this.cartTotal = 0;
-      this.cartItems.forEach((item: { qty: number; price: number }) => {
-        this.cartTotal += item.qty * item.price;
-      });
+    // if (this.cartItems.length === 0) {
+    //   this.cartItems.push({
+    //     productId: product.id,
+    //     productName: product.name,
+    //     qty: 1,
+    //     price: product.price,
+    //   });
+    // } else {
+    //   for (let item in this.cartItems) {
+    //     if (this.cartItems[item].productId === product.id) {
+    //       this.cartItems[item].qty++;
+    //       break;
+    //     } else {
+    //       this.cartItems.push({
+    //         productId: product.id,
+    //         productName: product.name,
+    //         qty: 1,
+    //         price: product.price,
+    //       });
+    //     }
+    //   }
+    // }
+
+    this.cartTotal = 0;
+    this.cartItems.forEach((item: { qty: number; price: number }) => {
+      this.cartTotal += item.qty * item.price;
     });
   }
 }
